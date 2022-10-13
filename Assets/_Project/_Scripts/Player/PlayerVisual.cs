@@ -27,7 +27,8 @@ namespace SimpleNetworkDemo.Player
             _renderer.material.color = next;
         }
 
-        public override void OnNetworkSpawn() {
+        public override void OnNetworkSpawn() 
+        {
             if (IsOwner) 
             {
                 _index = (int)OwnerClientId;
