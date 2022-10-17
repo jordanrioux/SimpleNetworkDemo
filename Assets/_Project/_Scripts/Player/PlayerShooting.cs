@@ -11,6 +11,8 @@ namespace SimpleNetworkDemo.Player
         [SerializeField] private float _cooldown = 0.5f;
         [SerializeField] private Transform _projectileSpawner;
 
+        [SerializeField] private GameObject _bombPrefab;
+        
         private float _lastFired = float.MinValue;
 
         public override void OnNetworkSpawn()
@@ -27,30 +29,45 @@ namespace SimpleNetworkDemo.Player
             {
                 _lastFired = Time.time;
                 CreateProjectileServerRpc();
-                Shoot();
             }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                CreateBombServerRpc();
+            }
+        }
+
+        [ServerRpc]
+        private void CreateBombServerRpc()
+        {
+            var t = transform;
+            var bomb = Instantiate(_bombPrefab, t.position, t.rotation);
+            bomb.GetComponent<NetworkObject>().Spawn();
         }
 
         [ServerRpc]
         private void CreateProjectileServerRpc()
         {
-            Assert.IsTrue(IsServer, "Can only be run by server");
-            SpawnProjectileClientRpc();
-        }
-
-        [ClientRpc]
-        private void SpawnProjectileClientRpc()
-        {
-            if (!IsOwner)
-            {
-                Shoot();    
-            }
+            Shoot();
         }
 
         private void Shoot()
         {
             var t = _projectileSpawner.transform;
             var projectile = Instantiate(_projectile, _projectileSpawner.position, _projectileSpawner.rotation);
+            
+            var networkObject = projectile.GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                networkObject.Spawn();
+            }
+
+            PlaySoundClientRpc();
+        }
+
+        [ClientRpc]
+        private void PlaySoundClientRpc()
+        {
             AudioSource.PlayClipAtPoint(_projectileSound, transform.position);
         }
     }

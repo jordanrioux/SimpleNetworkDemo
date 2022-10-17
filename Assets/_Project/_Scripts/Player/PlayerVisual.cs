@@ -32,7 +32,7 @@ namespace SimpleNetworkDemo.Player
             if (IsOwner) 
             {
                 _index = (int)OwnerClientId;
-                ChangeColorServerRpc(GetNextColor());
+                ChangeColorServerRpc();
             }
             else 
             {
@@ -40,16 +40,16 @@ namespace SimpleNetworkDemo.Player
             }
         }
 
-        [ServerRpc]
-        private void ChangeColorServerRpc(Color color) 
+        [ServerRpc(RequireOwnership = false)]
+        public void ChangeColorServerRpc() 
         {
-            _netColor.Value = color;
+            _netColor.Value = GetNextColor();
         }
 
         private void OnCollisionEnter2D(Collision2D col)
         {
             if (!IsOwner) return;
-            ChangeColorServerRpc(GetNextColor());
+            ChangeColorServerRpc();
         }
 
         private Color GetNextColor() 

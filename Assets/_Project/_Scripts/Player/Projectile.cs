@@ -3,12 +3,14 @@ using UnityEngine;
 
 namespace SimpleNetworkDemo.Player
 {
-    public class Projectile : MonoBehaviour 
+    public class Projectile : NetworkBehaviour 
     {
         [SerializeField] private Vector2 _velocity;
 
-        public void Awake() 
+        public override void OnNetworkSpawn()
         {
+            if (!IsServer) return;
+            
             Invoke(nameof(DestroyItself), 5);
         }
 
@@ -18,13 +20,29 @@ namespace SimpleNetworkDemo.Player
             transform.Translate(translation, Space.Self);
         }
 
-        private void DestroyItself() 
+        private void DestroyItself()
         {
-            Destroy(gameObject);
+            var networkObject = GetComponent<NetworkObject>();
+            if (networkObject != null)
+            {
+                networkObject.Despawn();
+            }
         }
         
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (!IsServer) return;
+
+            if (other.TryGetComponent<PlayerVisual>(out var visual))
+            {
+                visual.ChangeColorServerRpc();
+            }
+
+            if (other.TryGetComponent<PlayerHealth>(out var health))
+            {
+                health.TakeDamage(20);
+            }
+            
             DestroyItself();
         }
     }

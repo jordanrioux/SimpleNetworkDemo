@@ -76,6 +76,7 @@ GameObject:
   - component: {fileID: -5108548910753242475}
   - component: {fileID: 71459969209977790}
   - component: {fileID: 4499563365433997007}
+  - component: {fileID: 6974320352513459528}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -182,6 +183,7 @@ MonoBehaviour:
   _projectileSound: {fileID: 8300000, guid: df008d684b93a47c3b07fc029f03b0e8, type: 3}
   _cooldown: 0.5
   _projectileSpawner: {fileID: 8126774986386046522}
+  _bombPrefab: {fileID: 21974882251015089, guid: 9f21a38217b684d27a9841f4e431fd0b, type: 3}
 --- !u!50 &8126774985232741460
 Rigidbody2D:
   serializedVersion: 4
@@ -284,6 +286,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _renderer: {fileID: 8126774985232741451}
+--- !u!114 &6974320352513459528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8126774985232741448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ca9bbcf536fa4ea2bc2297011d8e34c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 100
 --- !u!1 &8126774986386046523
 GameObject:
   m_ObjectHideFlags: 0
